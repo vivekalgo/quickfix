@@ -99,9 +99,7 @@ function BookPageContent() {
         const { error } = await supabase.from('bookings').insert({
             id: newBookingId,
             user_id: user.uid,
-            user_name: user.displayName || 'Customer',
             shop_id: shop.id,
-            shop_name: shop.name,
             service_id: selectedService,
             service_price: service?.price || 0,
             date: selectedDate,
