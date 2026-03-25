@@ -41,6 +41,10 @@ jobs:
         run: npx cap sync android
         working-directory: apps/customer
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        working-directory: apps/customer/android
+
       - name: Build Android APK
         run: ./gradlew assembleDebug
         working-directory: apps/customer/android
