@@ -12,7 +12,7 @@ export default function ShopCard({ shop }: ShopCardProps) {
     const minPrice = Math.min(...shop.services.map(s => s.price))
 
     return (
-        <Link href={`/shops/${shop.id}`} className="block">
+        <Link href={`/shops/detail?id=${shop.id}`} className="block">
             <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow active:scale-[0.98] transition-transform">
                 {/* Image */}
                 <div className="relative h-44 bg-gray-100 overflow-hidden">

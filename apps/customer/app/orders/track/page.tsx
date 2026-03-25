@@ -1,6 +1,6 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { BookingStatus, supabase } from '@/lib/data'
 import StatusBadge from '@/components/StatusBadge'
 
@@ -16,7 +16,16 @@ const STEP_INFO = {
 }
 
 export default function OrderTrackingPage() {
-    const { id } = useParams()
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center font-bold text-gray-400">Loading order...</div>}>
+            <OrderTrackingContent />
+        </Suspense>
+    )
+}
+
+function OrderTrackingContent() {
+    const searchParams = useSearchParams()
+    const id = searchParams.get('id')
     const router = useRouter()
     
     const [booking, setBooking] = useState<any>(null)
@@ -74,7 +83,7 @@ export default function OrderTrackingPage() {
     }
 
     const handleReschedule = () => {
-        router.push(`/book/${shop?.id}?serviceId=${booking.service_id}`)
+        router.push(`/book?shopId=${shop?.id}&serviceId=${booking.service_id}`)
     }
 
     if (loading) return <div className="min-h-screen flex items-center justify-center font-bold text-gray-400">Loading order...</div>

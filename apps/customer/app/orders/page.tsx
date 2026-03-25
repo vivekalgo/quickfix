@@ -89,7 +89,7 @@ export default function OrdersPage() {
                 ) : (
                     <div className="flex flex-col gap-4">
                         {bookings.map(booking => {
-                            const goToDetails = () => router.push(`/orders/${booking.id}`)
+                            const goToDetails = () => router.push(`/orders/track?id=${booking.id}`)
                             
                             return (
                                 <div key={booking.id} 

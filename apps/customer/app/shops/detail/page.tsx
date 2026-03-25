@@ -1,12 +1,21 @@
 'use client'
-import { useParams, useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
 import { supabase } from '@/lib/data'
 import BottomNav from '@/components/BottomNav'
 import Link from 'next/link'
 
 export default function ShopDetailPage() {
-    const { id } = useParams()
+    return (
+        <Suspense fallback={<div className="p-10 flex flex-col items-center justify-center min-h-screen text-gray-400 font-bold animate-pulse">Loading shop specifics...</div>}>
+            <ShopDetailContent />
+        </Suspense>
+    )
+}
+
+function ShopDetailContent() {
+    const searchParams = useSearchParams()
+    const id = searchParams.get('id')
     const router = useRouter()
     
     const [shop, setShop] = useState<any>(null)
@@ -156,7 +165,7 @@ export default function ShopDetailPage() {
                                 </div>
                                 <div className="text-right shrink-0 ml-4">
                                     <p className="font-black text-[#FF6B35] text-lg">₹{service.price}</p>
-                                    <Link href={`/book/${shop.id}?serviceId=${service.id}`}>
+                                    <Link href={`/book?shopId=${shop.id}&serviceId=${service.id}`}>
                                         <button className="mt-1 bg-[#FF6B35] text-white text-xs font-bold px-3 py-1 rounded-full active:scale-95 transition-transform">
                                             Book
                                         </button>
@@ -217,7 +226,7 @@ export default function ShopDetailPage() {
                         </svg>
                         Call
                     </a>
-                    <Link href={`/book/${shop.id}`} className="flex-2 flex-1">
+                    <Link href={`/book?shopId=${shop.id}`} className="flex-2 flex-1">
                         <button className="w-full bg-gradient-to-r from-[#FF6B35] to-[#E85A24] text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-lg">
                             🔧 Book Service
                         </button>

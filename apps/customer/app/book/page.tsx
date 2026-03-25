@@ -1,6 +1,6 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/data'
 import BottomNav from '@/components/BottomNav'
 import { useAuth } from '@/lib/AuthContext'
@@ -18,8 +18,16 @@ const DATES = [0, 1, 2, 3, 4, 5, 6].map(n => {
 })
 
 export default function BookPage() {
-    const { shopId } = useParams()
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400 font-bold animate-pulse">Initializing Booking...</div>}>
+            <BookPageContent />
+        </Suspense>
+    )
+}
+
+function BookPageContent() {
     const searchParams = useSearchParams()
+    const shopId = searchParams.get('shopId')
     const router = useRouter()
     const { user, loading: authLoading } = useAuth()
     
