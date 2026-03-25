@@ -33,7 +33,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Next.js Web App
+      - name: Build Next.js Web App (Customer)
         run: npm run build
         working-directory: apps/customer
         env:
@@ -46,20 +46,42 @@ jobs:
           NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
           NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
 
-      - name: Sync Capacitor
+      - name: Build Next.js Web App (Provider)
+        run: npm run build
+        working-directory: apps/provider
+
+      - name: Sync Capacitor (Customer)
         run: npx cap sync android
         working-directory: apps/customer
 
-      - name: Grant execute permission for gradlew
+      - name: Sync Capacitor (Provider)
+        run: npx cap sync android
+        working-directory: apps/provider
+
+      - name: Grant execute permission for gradlew (Customer)
         run: chmod +x gradlew
         working-directory: apps/customer/android
 
-      - name: Build Android APK
+      - name: Grant execute permission for gradlew (Provider)
+        run: chmod +x gradlew
+        working-directory: apps/provider/android
+
+      - name: Build Android APK (Customer)
         run: ./gradlew assembleDebug
         working-directory: apps/customer/android
 
-      - name: Upload APK Artifact
+      - name: Build Android APK (Provider)
+        run: ./gradlew assembleDebug
+        working-directory: apps/provider/android
+
+      - name: Upload Customer APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug.apk
+          name: app-customer-debug.apk
           path: apps/customer/android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Provider APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-provider-debug.apk
+          path: apps/provider/android/app/build/outputs/apk/debug/app-debug.apk
