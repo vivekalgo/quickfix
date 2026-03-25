@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
+import { Geolocation } from '@capacitor/geolocation'
 
 // Dynamically import the map to avoid SSR issues
 const MapPopup = dynamic(() => import('./MapPopup'), { 
@@ -60,13 +61,26 @@ export default function LocationPicker({ isOpen, onClose, onSelect, initialLocat
         setSuggestions([])
     }
 
-    const useCurrentLocation = () => {
-        if (!navigator.geolocation) return alert('Geolocation is not supported by your browser')
+    const useCurrentLocation = async () => {
         setLoading(true)
-        navigator.geolocation.getCurrentPosition(
-            (pos) => setPosition([pos.coords.latitude, pos.coords.longitude]),
-            (err) => { alert('Failed to get location. Please enable location permissions.'); setLoading(false) }
-        )
+        try {
+            const permissions = await Geolocation.checkPermissions();
+            if (permissions.location !== 'granted') {
+                const requestResult = await Geolocation.requestPermissions();
+                if (requestResult.location !== 'granted') {
+                    alert('Failed to get location. Please enable location permissions.');
+                    setLoading(false);
+                    return;
+                }
+            }
+            
+            const coordinates = await Geolocation.getCurrentPosition();
+            setPosition([coordinates.coords.latitude, coordinates.coords.longitude]);
+        } catch (error) {
+            alert('Failed to get location. Please enable location permissions.');
+        } finally {
+            setLoading(false);
+        }
     }
 
     if (!isOpen) return null

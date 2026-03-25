@@ -103,7 +103,6 @@ function BookPageContent() {
             shop_id: shop.id,
             shop_name: shop.name,
             service_id: selectedService,
-            service_name: service?.name || '',
             service_price: service?.price || 0,
             date: selectedDate,
             time: selectedTime,
