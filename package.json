@@ -1,0 +1,18 @@
+{
+  "name": "quickfix-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:customer": "npm run dev --workspace=apps/customer",
+    "dev:provider": "npm run dev --workspace=apps/provider",
+    "dev:admin": "npm run dev --workspace=apps/admin",
+    "build:all": "npm run build --workspaces"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.100.0"
+  }
+}
