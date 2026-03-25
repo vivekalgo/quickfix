@@ -87,27 +87,29 @@ export default function BookPage() {
             role: 'customer',
         }, { onConflict: 'id' })
 
-        const res = await fetch('/api/bookings', {
-            method: 'POST',
-            body: JSON.stringify({
-                userId: user.uid,
-                userName: user.displayName || 'Customer',
-                shopId: shop.id,
-                shopName: shop.name,
-                serviceId: selectedService,
-                serviceName: service?.name || '',
-                servicePrice: service?.price || 0,
-                date: selectedDate,
-                time: selectedTime,
-                address: finalAddress,
-                description: finalInstructions,
-                paymentMethod,
-            }),
-            headers: { 'Content-Type': 'application/json' },
+        const newBookingId = `b${Date.now()}`
+        const { error } = await supabase.from('bookings').insert({
+            id: newBookingId,
+            user_id: user.uid,
+            user_name: user.displayName || 'Customer',
+            shop_id: shop.id,
+            shop_name: shop.name,
+            service_id: selectedService,
+            service_name: service?.name || '',
+            service_price: service?.price || 0,
+            date: selectedDate,
+            time: selectedTime,
+            address: finalAddress,
+            description: finalInstructions,
+            payment_method: paymentMethod,
+            status: 'requested',
         })
-        const data = await res.json()
         setSubmitting(false)
-        setBookingId(data.booking.id)
+        if (error) {
+            alert('Booking failed: ' + error.message)
+            return
+        }
+        setBookingId(newBookingId)
         setSubmitted(true)
     }
 
